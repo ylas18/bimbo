@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <body>
+
+        <ui:composition template="./Templates/masterPrincipal.xhtml">
+
+            <ui:define name="content">
+                <f:metadata>
+                    <f:event type="preRenderView" listener="#{controllerClie.validarSession()}"></f:event>
+                </f:metadata>
+
+                <h:form id="form1" >
+                    <p:growl  id="growl" showDetail="true" sticky="true" />  
+
+                    <p:panel  header="Administrador" style="font-size: 15px">   
+
+                        <table style="width: 100%"> 
+                            <tr>
+                                <td>
+                                    <h3>Amasado</h3>
+                                    <p:inputNumber id="nmb1" value="#{controllerAdmin.numero1}" symbol=" Min: "  valueChangeListener="#{controllerAdmin.onInputChangedAmasado}">
+                                        <p:ajax process="@this" update="growl" />
+                                        <p:ajax update="input1" />
+                                    </p:inputNumber>
+                                    <p:slider for="nmb1" />
+                                    <h3>Moldeado</h3>
+                                    <p:inputNumber id="nmb2" value="#{controllerAdmin.numero2}" symbol=" Min: "  valueChangeListener="#{controllerAdmin.onInputChangedMoldeado}">
+                                        <p:ajax process="@this" update="growl" />
+                                        <p:ajax update="input1" />
+                                    </p:inputNumber>
+                                    <p:slider for="nmb2" />
+                                    <h3>Elaboracion</h3>
+                                    <p:inputNumber id="nmb3" value="#{controllerAdmin.numero3}" symbol=" Min: "  valueChangeListener="#{controllerAdmin.onInputChangedElaboracion}">
+                                        <p:ajax process="@this" update="growl" />
+                                        <p:ajax update="input1" />
+                                    </p:inputNumber>
+                                    <p:slider for="nmb3" />
+                                </td>
+                                <td>
+                                    <img src="Imagenes/center.png" width="200px" height="300px"/>
+                                </td>
+                                <td>
+                                    <h3>Enfriamiento</h3>
+                                    <p:inputNumber id="nmb4" value="#{controllerAdmin.numero4}" symbol=" Min: "  valueChangeListener="#{controllerAdmin.onInputChangedEnfriado}">
+                                        <p:ajax process="@this" update="growl" />
+                                        <p:ajax update="input1" />
+                                    </p:inputNumber>
+                                    <p:slider for="nmb4" />
+                                    <h3>Empaque</h3>
+                                    <p:inputNumber id="nmb5" value="#{controllerAdmin.numero5}" symbol=" Min: "  valueChangeListener="#{controllerAdmin.onInputChangedEmpaque}">
+                                        <p:ajax process="@this" update="growl" />
+                                        <p:ajax update="input1" />  
+                                    </p:inputNumber>
+                                    <p:slider for="nmb5" />
+                                    <h3>Tiempo Total de Producción</h3>
+                                    <p:inputNumber id="input1" symbol="Min: " value="#{controllerAdmin.total}">  
+                                    </p:inputNumber>  
+                                    <p:commandButton value="Ajax Submit" id="ajax" update="growl" action="#{controllerAdmin.empezarProduccion}" style="margin-right:20px;" styleClass="ui-priority-primary">
+                                    </p:commandButton>
+
+
+
+                                </td>
+                            </tr>
+                        </table>
+
+
+
+
+                        <p:commandButton value="Cerrar Session" action="#{controllerClie.cerrarSession()}" />
+                    </p:panel> 
+                    <p:poll interval="3"   
+                            listener="#{controllerAdmin.calcularTiempoDescuento()}" update="input1" process="@this"/>
+                </h:form>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
