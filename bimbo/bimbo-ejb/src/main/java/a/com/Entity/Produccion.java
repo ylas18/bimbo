@@ -35,6 +35,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Produccion.findByCantidadMinimaPan", query = "SELECT p FROM Produccion p WHERE p.cantidadMinimaPan = :cantidadMinimaPan"),
     @NamedQuery(name = "Produccion.findByCantidadPan", query = "SELECT p FROM Produccion p WHERE p.cantidadPan = :cantidadPan"),
     @NamedQuery(name = "Produccion.findByFecha", query = "SELECT p FROM Produccion p WHERE p.fecha = :fecha"),
+    @NamedQuery(name = "Produccion.findByTiempoElaboracionAmasado", query = "SELECT p FROM Produccion p WHERE p.tiempoElaboracionAmasado = :tiempoElaboracionAmasado"),
     @NamedQuery(name = "Produccion.findByTiempoAmasado", query = "SELECT p FROM Produccion p WHERE p.tiempoAmasado = :tiempoAmasado"),
     @NamedQuery(name = "Produccion.findByTiempoElaboracion", query = "SELECT p FROM Produccion p WHERE p.tiempoElaboracion = :tiempoElaboracion"),
     @NamedQuery(name = "Produccion.findByTiempoEmpaque", query = "SELECT p FROM Produccion p WHERE p.tiempoEmpaque = :tiempoEmpaque"),
@@ -58,6 +59,10 @@ public class Produccion implements Serializable {
     @Column(name = "fecha")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fecha;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "tiempo_elaboracion_amasado")
+    private int tiempoElaboracionAmasado;
     @Basic(optional = false)
     @NotNull
     @Column(name = "tiempo_amasado")
@@ -86,9 +91,10 @@ public class Produccion implements Serializable {
         this.idProduccion = idProduccion;
     }
 
-    public Produccion(Integer idProduccion, Date fecha, int tiempoAmasado, int tiempoElaboracion, int tiempoEmpaque, int tiempoEnfriado, int tiempoMoldeado) {
+    public Produccion(Integer idProduccion, Date fecha, int tiempoElaboracionAmasado, int tiempoAmasado, int tiempoElaboracion, int tiempoEmpaque, int tiempoEnfriado, int tiempoMoldeado) {
         this.idProduccion = idProduccion;
         this.fecha = fecha;
+        this.tiempoElaboracionAmasado = tiempoElaboracionAmasado;
         this.tiempoAmasado = tiempoAmasado;
         this.tiempoElaboracion = tiempoElaboracion;
         this.tiempoEmpaque = tiempoEmpaque;
@@ -134,6 +140,14 @@ public class Produccion implements Serializable {
 
     public void setFecha(Date fecha) {
         this.fecha = fecha;
+    }
+
+    public int getTiempoElaboracionAmasado() {
+        return tiempoElaboracionAmasado;
+    }
+
+    public void setTiempoElaboracionAmasado(int tiempoElaboracionAmasado) {
+        this.tiempoElaboracionAmasado = tiempoElaboracionAmasado;
     }
 
     public int getTiempoAmasado() {

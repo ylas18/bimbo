@@ -24,7 +24,13 @@
                         </p:inputNumber> 
 
                         <p:panelGrid style=" margin-bottom: 15px; margin-top: 15px; "  columns="2" layout="grid">
+                            
+                            <p:commandButton value="Iniciar Elaboracion de Masa" onclick="PF('pollCliente').start()" id="ascascasc" update="growl" action="#{controllerAdmin.IniciarElaboracion_Amasado()}" >
 
+                            </p:commandButton>
+                            <p:commandButton value="Detener Elaboracion de Masa" onclick="PF('pollCliente').stop()" update="growl" action="#{controllerAdmin.detenerElaboracion_Amasado()}">
+                            
+                            </p:commandButton>
                             <p:commandButton value="Iniciar Amasado" >
 
                             </p:commandButton>

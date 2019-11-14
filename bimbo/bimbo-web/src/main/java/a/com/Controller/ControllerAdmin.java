@@ -48,21 +48,26 @@ public class ControllerAdmin implements Serializable {
     private PDFOptions pdfOpt;
 
     private Usuario per;
-    private int numero1 = 100;
-    private int numero2 = 100;
-    private int numero3 = 100;
-    private int numero4 = 100;
-    private int numero5 = 100;
-    private int amasado = 100;
-    private int moldeado = 100;
-    private int elaboracion = 100;
-    private int enfriado = 100;
-    private int empaque = 100;
-    private int total_tiempo = 500;
-    private int total_pan = 500;
+    private int numero1 = 20;
+    private int numero2 = 15;
+    private int numero3 = 30;
+    private int numero4 = 60;
+    private int numero5 = 45;
+    private int numero6 = 20;
+    private int elaboracion_amasado = 20;
+    private int amasado = 15;
+    private int moldeado = 30;
+    private int elaboracion = 60;
+    private int enfriado = 45;
+    private int empaque = 20;
+    private int total_tiempo = 190;
+    private int total_pan = 190;
     private int min_pan = 0;
     private int max_pan = 0;
     private int contador = 0;
+    private int inicio = 0;
+    private int fin = 0;
+    private int paro = 0;
 
     @PostConstruct
     public void init() {
@@ -108,6 +113,14 @@ public class ControllerAdmin implements Serializable {
 
     }
 
+    public void onInputChangedElaboracion_Amasado(ValueChangeEvent event) {
+        FacesMessage message = new FacesMessage("Entrada Elaboracion Amasado", "Tiempo: " + event.getNewValue() + " Minutos");
+        elaboracion_amasado = (int) event.getNewValue();
+        System.out.println(elaboracion_amasado);
+        calcularTotal();
+        FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+
     public void onInputChangedAmasado(ValueChangeEvent event) {
         FacesMessage message = new FacesMessage("Entrada Amasado", "Tiempo: " + event.getNewValue() + " Minutos");
         amasado = (int) event.getNewValue();
@@ -149,16 +162,47 @@ public class ControllerAdmin implements Serializable {
     }
 
     public void calcularTotal() {
-        total_tiempo = amasado + elaboracion + empaque + enfriado + moldeado;
-        total_pan = (500 - total_tiempo) + 500;
+        total_tiempo = elaboracion_amasado + amasado + elaboracion + empaque + enfriado + moldeado;
+        total_pan = (190 - total_tiempo) + 190;
         System.out.println(total_pan);
     }
 
     public void calcularTiempoDescuento() {
-        if (total_tiempo <= 0) {
+        if (total_tiempo == 0) {
             System.out.println("Acabe proceso");
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Incorrecto", "Datos Incorrectos"));
         } else {
+            if (numero1 == 0) {
+                numero1 = 0;
+                if (numero2 == 0) {
+                    numero2 = 0;
+                    if (numero3 == 0) {
+                        numero3 = 0;
+                        if (numero4 == 0) {
+                            numero4 = 0;
+                            if (numero5 == 0) {
+                                numero5 = 0;
+                                if (numero6 == 0) {
+                                    numero6 = 0;
+                                } else {
+                                    numero6 = numero6 - 1;
+                                }
+                            } else {
+                                numero5 = numero5 - 1;
+                            }
+                        } else {
+                            numero4 = numero4 - 1;
+                        }
+                    } else {
+                        numero3 = numero3 - 1;
+                    }
+                } else {
+                    numero2 = numero2 - 1;
+                }
+            } else {
+                numero1 = numero1 - 1;
+            }
+
             total_tiempo = total_tiempo - 1;
             contador++;
         }
@@ -173,6 +217,7 @@ public class ControllerAdmin implements Serializable {
         } else {
 
             Produccion produccion = new Produccion();
+            produccion.setTiempoElaboracionAmasado(elaboracion_amasado);
             produccion.setTiempoAmasado(amasado);
             produccion.setTiempoMoldeado(moldeado);
             produccion.setTiempoElaboracion(elaboracion);
@@ -205,6 +250,29 @@ public class ControllerAdmin implements Serializable {
         pdfOpt.setFacetFontStyle("Arial");
         pdfOpt.setCellFontSize("12");
 
+    }
+
+    public void IniciarElaboracion_Amasado() {
+        
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Advertencia", "A Iniciado el proceso de Elaboracion de Masa"));
+        
+        System.out.println("Total sin "+total_tiempo);
+        fin = contador;
+        paro = fin - inicio;
+        total_tiempo = total_tiempo + paro;
+        
+        System.out.println("Fin "+fin);
+        System.out.println("Paro "+paro);
+        System.out.println("Tiempo Con"+total_tiempo);
+;
+    }
+
+    public void detenerElaboracion_Amasado() {
+
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Advertencia", "A finalizado el proceso de Elaboracion de Masa"));
+        inicio = contador;
+        
+        System.out.println(inicio);
     }
 
     public void detenerAmasado() {
@@ -276,6 +344,30 @@ public class ControllerAdmin implements Serializable {
 
     public void setNumero5(int numero5) {
         this.numero5 = numero5;
+    }
+
+    public int getNumero6() {
+        return numero6;
+    }
+
+    public void setNumero6(int numero6) {
+        this.numero6 = numero6;
+    }
+
+    public int getElaboracion_amasado() {
+        return elaboracion_amasado;
+    }
+
+    public void setElaboracion_amasado(int elaboracion_amasado) {
+        this.elaboracion_amasado = elaboracion_amasado;
+    }
+
+    public int getContador() {
+        return contador;
+    }
+
+    public void setContador(int contador) {
+        this.contador = contador;
     }
 
     public int getAmasado() {
@@ -372,6 +464,30 @@ public class ControllerAdmin implements Serializable {
 
     public void setPdfOpt(PDFOptions pdfOpt) {
         this.pdfOpt = pdfOpt;
+    }
+
+    public int getInicio() {
+        return inicio;
+    }
+
+    public void setInicio(int inicio) {
+        this.inicio = inicio;
+    }
+
+    public int getFin() {
+        return fin;
+    }
+
+    public void setFin(int fin) {
+        this.fin = fin;
+    }
+
+    public int getParo() {
+        return paro;
+    }
+
+    public void setParo(int paro) {
+        this.paro = paro;
     }
 
 }
