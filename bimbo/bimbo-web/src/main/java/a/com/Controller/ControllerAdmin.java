@@ -5,14 +5,31 @@
  */
 package a.com.Controller;
 
+import a.com.Bean.ProduccionFacadeLocal;
+import a.com.Entity.Produccion;
 import a.com.Entity.Usuario;
+import com.lowagie.text.BadElementException;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Image;
+import com.lowagie.text.PageSize;
+import java.io.File;
+import java.io.IOException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 import javax.servlet.http.HttpSession;
+import org.primefaces.component.datatable.DataTable;
+import org.primefaces.component.export.Exporter;
+import org.primefaces.component.export.PDFOptions;
 
 /**
  * Bean en cual se encarga de la session del Administrador
@@ -23,21 +40,36 @@ import javax.servlet.http.HttpSession;
 @SessionScoped
 public class ControllerAdmin implements Serializable {
 
-    /*
-     Creamos el objeto persona para validar la session
-     */
+    @EJB
+    ProduccionFacadeLocal produccionFacadeLocal;
+
+    private List<Produccion> listaProduccion;
+
+    private PDFOptions pdfOpt;
+
     private Usuario per;
-    private int numero1;
-    private int numero2;
-    private int numero3;
-    private int numero4;
-    private int numero5;
-    private int amasado;
-    private int moldeado;
-    private int elaboracion;
-    private int enfriado;
-    private int empaque;
-    private int total;
+    private int numero1 = 100;
+    private int numero2 = 100;
+    private int numero3 = 100;
+    private int numero4 = 100;
+    private int numero5 = 100;
+    private int amasado = 100;
+    private int moldeado = 100;
+    private int elaboracion = 100;
+    private int enfriado = 100;
+    private int empaque = 100;
+    private int total_tiempo = 500;
+    private int total_pan = 500;
+    private int min_pan = 0;
+    private int max_pan = 0;
+    private int contador = 0;
+
+    @PostConstruct
+    public void init() {
+        listaProduccion = produccionFacadeLocal.findAll();
+        customizationOptions();
+
+    }
 
     /**
      * Metodo el cual valida la session. Valida si la persona tiene session o
@@ -116,22 +148,83 @@ public class ControllerAdmin implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
 
-    public int calcularTotal() {
-        total = amasado + elaboracion + empaque + enfriado + moldeado;
-        return total;
-
+    public void calcularTotal() {
+        total_tiempo = amasado + elaboracion + empaque + enfriado + moldeado;
+        total_pan = (500 - total_tiempo) + 500;
+        System.out.println(total_pan);
     }
 
     public void calcularTiempoDescuento() {
-        if (total <= 0) {
+        if (total_tiempo <= 0) {
+            System.out.println("Acabe proceso");
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Incorrecto", "Datos Incorrectos"));
         } else {
-            total = total - 1;
+            total_tiempo = total_tiempo - 1;
+            contador++;
         }
     }
 
     public void empezarProduccion() {
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Correcto", "Inicio de prodiccion exitoso"));
+
+        java.util.Date fecha = new Date();
+
+        if (total_tiempo <= 0) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Debe iniciar algun proceso"));
+        } else {
+
+            Produccion produccion = new Produccion();
+            produccion.setTiempoAmasado(amasado);
+            produccion.setTiempoMoldeado(moldeado);
+            produccion.setTiempoElaboracion(elaboracion);
+            produccion.setTiempoEnfriado(enfriado);
+            produccion.setTiempoEmpaque(empaque);
+            produccion.setFecha(fecha);
+            produccion.setCantidadPan(total_pan);
+
+            produccionFacadeLocal.create(produccion);
+
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Correcto", "Inicio de prodiccion exitoso"));
+        }
+    }
+
+    public void preProcessPDF(Object document) throws IOException, BadElementException, DocumentException {
+        Document pdf = (Document) document;
+        pdf.open();
+        pdf.setPageSize(PageSize.A4);
+
+        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+        String logo = externalContext.getRealPath("") + File.separator + "Imagenes" + File.separator + "pdf.png";
+
+        pdf.add(Image.getInstance(logo));
+    }
+
+    public void customizationOptions() {
+        pdfOpt = new PDFOptions();
+        pdfOpt.setFacetBgColor("#036fab");
+        pdfOpt.setFacetFontColor("#ffffff");
+        pdfOpt.setFacetFontStyle("Arial");
+        pdfOpt.setCellFontSize("12");
+
+    }
+
+    public void detenerAmasado() {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Advertencia", "A finalizado el proceso de Amasado"));
+    }
+
+    public void detenerMoldeado() {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Advertencia", "A finalizado el proceso de Moldeado"));
+    }
+
+    public void detenerElaboracion() {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Advertencia", "A finalizado el proceso de Elaboracion"));
+    }
+
+    public void detenerEnfriado() {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Advertencia", "A finalizado el proceso de Enfriafo"));
+    }
+
+    public void detenerEmpaque() {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Advertencia", "A finalizado el proceso de Empaque"));
     }
 
     public ControllerAdmin() {
@@ -225,12 +318,60 @@ public class ControllerAdmin implements Serializable {
         this.empaque = empaque;
     }
 
-    public int getTotal() {
-        return total;
+    public ProduccionFacadeLocal getProduccionFacadeLocal() {
+        return produccionFacadeLocal;
     }
 
-    public void setTotal(int total) {
-        this.total = total;
+    public void setProduccionFacadeLocal(ProduccionFacadeLocal produccionFacadeLocal) {
+        this.produccionFacadeLocal = produccionFacadeLocal;
+    }
+
+    public int getTotal_tiempo() {
+        return total_tiempo;
+    }
+
+    public void setTotal_tiempo(int total_tiempo) {
+        this.total_tiempo = total_tiempo;
+    }
+
+    public int getTotal_pan() {
+        return total_pan;
+    }
+
+    public void setTotal_pan(int total_pan) {
+        this.total_pan = total_pan;
+    }
+
+    public int getMin_pan() {
+        return min_pan;
+    }
+
+    public void setMin_pan(int min_pan) {
+        this.min_pan = min_pan;
+    }
+
+    public int getMax_pan() {
+        return max_pan;
+    }
+
+    public void setMax_pan(int max_pan) {
+        this.max_pan = max_pan;
+    }
+
+    public List<Produccion> getListaProduccion() {
+        return listaProduccion;
+    }
+
+    public void setListaProduccion(List<Produccion> listaProduccion) {
+        this.listaProduccion = listaProduccion;
+    }
+
+    public PDFOptions getPdfOpt() {
+        return pdfOpt;
+    }
+
+    public void setPdfOpt(PDFOptions pdfOpt) {
+        this.pdfOpt = pdfOpt;
     }
 
 }

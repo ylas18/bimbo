@@ -17,9 +17,51 @@
                 <h:form id="form2" >
                     <p:growl  id="growl" showDetail="true" sticky="true"  />  
 
-                    <p:panel  header="Cliente">   
+                    <p:panel  header="Control de Calidad">
+                        
+                        <h3>Tiempo Total de Producción</h3>
+                        <p:inputNumber style="font-size: 25px"  id="input1" symbol="Min: " value="#{controllerAdmin.total_tiempo}" disabled="true" padControl="false">  
+                        </p:inputNumber> 
 
-                        <p:commandButton value="Cerrar Session" action="#{controllerClie.cerrarSession()}" />
+                        <p:panelGrid style=" margin-bottom: 15px; margin-top: 15px; "  columns="2" layout="grid">
+
+                            <p:commandButton value="Iniciar Amasado" >
+
+                            </p:commandButton>
+                            <p:commandButton value="Detener Amasado" onclick="PF('pollCliente').stop()" update="growl" action="#{controllerAdmin.detenerAmasado()}">
+
+                            </p:commandButton>
+                            <p:commandButton value="Iniciar Moldeado">
+
+                            </p:commandButton>
+                            <p:commandButton value="Detener Moldeado" onclick="PF('pollCliente').stop()" update="growl" action="#{controllerAdmin.detenerMoldeado()}">
+
+                            </p:commandButton>
+                            <p:commandButton  value="Iniciar Elaboracion" >
+
+                            </p:commandButton>
+                            <p:commandButton value="Detener Elaboracion" onclick="PF('pollCliente').stop()" update="growl" action="#{controllerAdmin.detenerElaboracion()}" >
+
+                            </p:commandButton>
+                            <p:commandButton value="Iniciar Enfriado" >
+
+                            </p:commandButton>
+                            <p:commandButton value="Detener Enfriado" onclick="PF('pollCliente').stop()" update="growl" action="#{controllerAdmin.detenerEnfriado()}">
+
+                            </p:commandButton>
+                            <p:commandButton value="Iniciar Empaque">
+
+                            </p:commandButton>
+                            <p:commandButton  value="Detener Empaque" onclick="PF('pollCliente').stop()" update="growl" action="#{controllerAdmin.detenerEmpaque()}">
+
+                            </p:commandButton>
+
+                        </p:panelGrid>
+
+                        <p:poll interval="1"   
+                                update="input1" widgetVar="pollCliente"/>
+
+                        <p:commandButton style="margin-top: 15px" value="Cerrar Session" action="#{controllerClie.cerrarSession()}" />
                     </p:panel> 
 
                 </h:form>

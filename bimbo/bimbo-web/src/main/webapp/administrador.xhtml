@@ -7,7 +7,6 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html">
 
     <body>
-
         <ui:composition template="./Templates/masterPrincipal.xhtml">
 
             <ui:define name="content">
@@ -16,67 +15,153 @@
                 </f:metadata>
 
                 <h:form id="form1" >
-                    <p:growl  id="growl" showDetail="true" sticky="true" />  
-
-                    <p:panel  header="Administrador" style="font-size: 15px">   
-
-                        <table style="width: 100%"> 
-                            <tr>
-                                <td>
-                                    <h3>Amasado</h3>
-                                    <p:inputNumber id="nmb1" value="#{controllerAdmin.numero1}" symbol=" Min: "  valueChangeListener="#{controllerAdmin.onInputChangedAmasado}">
-                                        <p:ajax process="@this" update="growl" />
-                                        <p:ajax update="input1" />
-                                    </p:inputNumber>
-                                    <p:slider for="nmb1" />
-                                    <h3>Moldeado</h3>
-                                    <p:inputNumber id="nmb2" value="#{controllerAdmin.numero2}" symbol=" Min: "  valueChangeListener="#{controllerAdmin.onInputChangedMoldeado}">
-                                        <p:ajax process="@this" update="growl" />
-                                        <p:ajax update="input1" />
-                                    </p:inputNumber>
-                                    <p:slider for="nmb2" />
-                                    <h3>Elaboracion</h3>
-                                    <p:inputNumber id="nmb3" value="#{controllerAdmin.numero3}" symbol=" Min: "  valueChangeListener="#{controllerAdmin.onInputChangedElaboracion}">
-                                        <p:ajax process="@this" update="growl" />
-                                        <p:ajax update="input1" />
-                                    </p:inputNumber>
-                                    <p:slider for="nmb3" />
-                                </td>
-                                <td>
-                                    <img src="Imagenes/center.png" width="200px" height="300px"/>
-                                </td>
-                                <td>
-                                    <h3>Enfriamiento</h3>
-                                    <p:inputNumber id="nmb4" value="#{controllerAdmin.numero4}" symbol=" Min: "  valueChangeListener="#{controllerAdmin.onInputChangedEnfriado}">
-                                        <p:ajax process="@this" update="growl" />
-                                        <p:ajax update="input1" />
-                                    </p:inputNumber>
-                                    <p:slider for="nmb4" />
-                                    <h3>Empaque</h3>
-                                    <p:inputNumber id="nmb5" value="#{controllerAdmin.numero5}" symbol=" Min: "  valueChangeListener="#{controllerAdmin.onInputChangedEmpaque}">
-                                        <p:ajax process="@this" update="growl" />
-                                        <p:ajax update="input1" />  
-                                    </p:inputNumber>
-                                    <p:slider for="nmb5" />
-                                    <h3>Tiempo Total de Producción</h3>
-                                    <p:inputNumber id="input1" symbol="Min: " value="#{controllerAdmin.total}">  
-                                    </p:inputNumber>  
-                                    <p:commandButton value="Ajax Submit" id="ajax" update="growl" action="#{controllerAdmin.empezarProduccion}" style="margin-right:20px;" styleClass="ui-priority-primary">
-                                    </p:commandButton>
+                    <p:tabView>
+                        <p:tab title="Inicio Administrador">
+                            <p:growl  id="growl" showDetail="true" sticky="true" />  
 
 
-
-                                </td>
-                            </tr>
-                        </table>
+                            <p:panel  header="Administrador" style="font-size: 15px">  
 
 
+                                <table style="width: 100%">
+                                    <tr>
+                                        <td>
+                                            <h3>Minimo Pan Blanco</h3>
+                                            <p:inputNumber   id="min" symbol="Und: " value="#{controllerAdmin.min_pan}" padControl="false">  
+                                            </p:inputNumber>            
+                                        </td>
+                                        <td>
+                                            <h3>Maximo Pan Blanco</h3>
+                                            <p:inputNumber  id="max" symbol="Und: " value="#{controllerAdmin.max_pan}" padControl="false">  
+                                            </p:inputNumber>            
+                                        </td>
+                                        <td>
+                                            <h3>Total Pan Blanco</h3>
+                                            <p:inputNumber  id="tot" symbol="Und: " value="#{controllerAdmin.total_pan}" padControl="false">  
+                                            </p:inputNumber>            
+                                        </td>
+                                        <td>
+                                            <h3>Tiempo Total de Producción</h3>
+                                            <p:inputNumber  id="input1" symbol="Min: " value="#{controllerAdmin.total_tiempo}" disabled="true" padControl="false">  
+                                            </p:inputNumber>            
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <table style="width: 100%"> 
+                                    <tr>
+                                        <td>
+                                            <h3>Amasado</h3>
+                                            <p:inputNumber id="nmb1" value="#{controllerAdmin.numero1}" symbol=" Min: "  valueChangeListener="#{controllerAdmin.onInputChangedAmasado}" padControl="false">
+                                                <p:ajax process="@this" update="growl" />
+                                                <p:ajax update="input1" />
+                                                <p:ajax update="tot" />
+                                            </p:inputNumber>
+                                            <p:slider for="nmb1" />
+                                            <h3>Moldeado</h3>
+                                            <p:inputNumber id="nmb2" value="#{controllerAdmin.numero2}" symbol=" Min: "  valueChangeListener="#{controllerAdmin.onInputChangedMoldeado}" padControl="false">
+                                                <p:ajax process="@this" update="growl" />
+                                                <p:ajax update="input1" />
+                                                <p:ajax update="tot" />
+                                            </p:inputNumber>
+                                            <p:slider for="nmb2" />
+                                            <h3>Elaboracion</h3>
+                                            <p:inputNumber id="nmb3" value="#{controllerAdmin.numero3}" symbol=" Min: "  valueChangeListener="#{controllerAdmin.onInputChangedElaboracion}" padControl="false">
+                                                <p:ajax process="@this" update="growl" />
+                                                <p:ajax update="input1" />
+                                                <p:ajax update="tot" />
+                                            </p:inputNumber>
+                                            <p:slider for="nmb3" />
+                                        </td>
+                                        <td style="width: 100%">
+                                            <img src="Imagenes/center.png" width="200px" height="300px"/>
+                                        </td>
+                                        <td>
+                                            <h3>Enfriamiento</h3>
+                                            <p:inputNumber id="nmb4" value="#{controllerAdmin.numero4}" symbol=" Min: "  valueChangeListener="#{controllerAdmin.onInputChangedEnfriado}" padControl="false">
+                                                <p:ajax process="@this" update="growl" />
+                                                <p:ajax update="input1" />
+                                                <p:ajax update="tot" />
+                                            </p:inputNumber>
+                                            <p:slider for="nmb4" />
+                                            <h3>Empaque</h3>
+                                            <p:inputNumber id="nmb5" value="#{controllerAdmin.numero5}" symbol=" Min: "  valueChangeListener="#{controllerAdmin.onInputChangedEmpaque}" padControl="false">
+                                                <p:ajax process="@this" update="growl" />
+                                                <p:ajax update="input1" />
+                                                <p:ajax update="tot" />
+                                            </p:inputNumber>
+                                            <p:slider for="nmb5" />
 
 
-                        <p:commandButton value="Cerrar Session" action="#{controllerClie.cerrarSession()}" />
-                    </p:panel> 
-                    <p:poll interval="3"   
-                            listener="#{controllerAdmin.calcularTiempoDescuento()}" update="input1" process="@this"/>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <table style="width: 100%">
+                                    <tr>
+                                        <td>
+                                            <p:commandButton  onclick="PF('pollVarIni').start()" value="Iniciar Produccion" id="ajax" update="growl" action="#{controllerAdmin.empezarProduccion}" >
+                                            </p:commandButton>
+                                            <p:commandButton onclick="PF('pollVarIni').stop()" value="Cerrar Session" action="#{controllerAdmin.cerrarSession()}"  />
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </p:panel> 
+                            <p:poll interval="3"   
+                                    listener="#{controllerAdmin.calcularTiempoDescuento()}" update="input1" widgetVar="pollVarIni" autoStart="false"/>
+
+                        </p:tab>
+                        
+                        <p:tab title="Reportes">
+
+                            <p:panel  header="Reportes" style="font-size: 15px">  
+                                
+                                <p:dataTable id="tbl2" var="car" value="#{controllerAdmin.listaProduccion}"
+                                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                                             paginator="true" rows="10" style="margin-top: 25px;">
+
+                                    <f:facet name="{Exporters}">
+                                        <div style="float:right">
+                                            <h:commandLink>
+                                                <p:graphicImage url="/Imagenes/pdf.png" width="24"/>
+                                                <p:dataExporter type="pdf" target="tbl2" fileName="Producción Pan Blanco" options="#{controllerAdmin.pdfOpt}" />
+                                            </h:commandLink>
+                                        </div>
+                                    </f:facet>
+
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Id" />
+                                        </f:facet>
+                                        <h:outputText value="#{car.idProduccion}" />
+                                    </p:column>
+
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Year" />
+                                        </f:facet>
+                                        <h:outputText value="#{car.fecha}" />
+                                    </p:column>
+
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Brand" />
+                                        </f:facet>
+                                        <h:outputText value="#{car.cantidadPan}" />
+                                    </p:column>
+
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Color" />
+                                        </f:facet>
+                                        <h:outputText value="#{car.tiempoElaboracion}" />
+                                    </p:column>
+                                </p:dataTable>
+
+                            </p:panel>
+                        </p:tab>
+                    </p:tabView>
                 </h:form>
 
             </ui:define>
